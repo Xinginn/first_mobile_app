@@ -1,12 +1,16 @@
+import { useMutation } from '@apollo/client';
 import * as React from 'react';
 import { Alert, Button, Text, TextInput, View } from "react-native";
+import loginMutation from '../apollo/loginMutation';
 
 export default function LoginScreen() {
   const [username,setUsername] = React.useState('');
   const [password,setPassword] = React.useState('');
-  
-  function handleSubmit() {
-    Alert.alert(username, password)
+  const [login, { data, loading, error}] = useMutation(loginMutation);
+
+  async function handleSubmit() {
+    let resp = await login({variables: { input: {identifier: username, password: password} } });
+    console.log(resp)
   }
   
   return (

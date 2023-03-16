@@ -4,11 +4,18 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button} from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 
 import LoginScreen from './Screens/LoginScreen';
 import RegisterScreen from './Screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
+
+const client = new ApolloClient({
+  uri: 'https://digitalcampus.nerdy-bear.com/graphql',
+  cache: new InMemoryCache(),
+});
+
 
 function HomeScreen({ navigation }) {
   return (
@@ -28,14 +35,17 @@ function HomeScreen({ navigation }) {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-      </Stack.Navigator>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </Stack.Navigator>
 
-    </NavigationContainer>
+      </NavigationContainer>
+    </ApolloProvider>
   )
 }
 
