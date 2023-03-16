@@ -1,4 +1,4 @@
-import { Alert, Button, Text, View } from "react-native";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 
 export default function CountButton() {
 
@@ -8,7 +8,7 @@ export default function CountButton() {
 
   return (
     <View>
-      <Text>Du text</Text>
+      <Text style={styles.leftOffset}>Du text</Text>
       <Button
         onPress={testButton}
         title="Learn More"
@@ -19,3 +19,9 @@ export default function CountButton() {
       
   );
 }
+
+const styles = StyleSheet.create({
+  leftOffset: {
+    marginLeft:-75
+  }
+});
