@@ -1,17 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import CountButton from './components/CountButton';
+import * as React from 'react';
 
-export default function App() {
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Button} from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import LoginScreen from './Screens/LoginScreen';
+import RegisterScreen from './Screens/RegisterScreen';
+
+const Stack = createNativeStackNavigator();
+
+function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Text style={styles.red}>Open up App.js to start working on your app!</Text>
-      <CountButton/>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        title="Login"
+        onPress={() => navigation.navigate('Login')}
+      />
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate('Register')}
+      />
+      <Text>Home Screen</Text>
     </View>
   );
 }
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+      </Stack.Navigator>
+
+    </NavigationContainer>
+  )
+}
+
 
 const styles = StyleSheet.create({
   container: {
