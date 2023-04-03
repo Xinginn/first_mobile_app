@@ -4,23 +4,29 @@ import { Text, TextInput, View } from "react-native";
 import { Button } from 'react-native';
 import registerMutation from '../apollo/registerMutation';
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }) {
   const [username,setUsername] = React.useState('');
   const [email,setEmail] = React.useState('');
   const [password,setPassword] = React.useState('');
   const [register, {data, loading, error }] = useMutation(registerMutation);
   
   async function handleSubmit() {
-    let resp = await register({
-      variables: { 
-        input: {
-          username: username,
-          email: email,
-          password: password
+    try {
+      let resp = await register({
+        variables: { 
+          input: {
+            username: username,
+            email: email,
+            password: password
+          } 
         } 
-      } 
-    });
-    console.log(resp)
+      });
+      console.log(resp)
+      navigation.navigate('List')
+    } catch(error) {
+      console.log(error)
+    }
+    
     
   }
 

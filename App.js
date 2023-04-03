@@ -4,15 +4,36 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button} from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LoginScreen from './Screens/LoginScreen';
 import RegisterScreen from './Screens/RegisterScreen';
+import PlacesScreen from './Screens/PlacesScreen';
+import CreatePlaceScreen from './Screens/CreatePlaceScreen';
+import { useEffect } from 'react/cjs/react.development';
+import { useUserStore } from './lib/store/user';
 
-const Stack = createNativeStackNavigator();
+
+const httpLink = createHttpLink({
+  uri: 'https://digitalcampus.nerdy-bear.com/graphql',
+});
+
+const authLink = setContext( async (_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = await AsyncStorage.getItem('@accessToken')
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
 
 const client = new ApolloClient({
-  uri: 'https://digitalcampus.nerdy-bear.com/graphql',
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
@@ -28,20 +49,54 @@ function HomeScreen({ navigation }) {
         title="Register"
         onPress={() => navigation.navigate('Register')}
       />
+      <Button
+        title="Places"
+        onPress={() => navigation.navigate('Places')}
+      />
       <Text>Home Screen</Text>
     </View>
   );
 }
 
+const Stack = createNativeStackNavigator();
+const Loader = () => <Text>Loading...</Text>;
+
 export default function App() {
+	const [connected, setConnected] = React.useState(undefined);
+  const { connected: connectedStore } = useUserStore();
+
+	useEffect(() => {
+		async function checkToken() {
+			const token = await AsyncStorage.getItem('@accessToken');
+			if (!token) return setConnected(false);
+
+			return setConnected(true);
+		}
+
+		checkToken();
+	}, [connectedStore]);
+
+
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
         
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
+          {connected === undefined && <Stack.Screen name="Loader" component={Loader} />}  
+          {connected == false && (
+            <>
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Register" component={RegisterScreen} />
+            </>
+          )}
+          {connected == true && (
+            <>
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Places" component={PlacesScreen} />
+              <Stack.Screen name="CreatePlace" component={CreatePlaceScreen} />
+            </>
+          )}
         </Stack.Navigator>
 
       </NavigationContainer>
