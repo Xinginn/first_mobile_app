@@ -21,6 +21,7 @@ export default function RegisterScreen() {
       } 
     });
     console.log(resp)
+    
   }
 
   return (

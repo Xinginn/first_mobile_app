@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import * as React from 'react';
 import { Button, Text, TextInput, View } from "react-native";
 import loginMutation from '../apollo/loginMutation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const [username,setUsername] = React.useState('');
@@ -9,12 +10,22 @@ export default function LoginScreen() {
   const [login, { data, loading, error}] = useMutation(loginMutation);
 
   async function handleSubmit() {
-    let resp = await login({
-      variables: { 
-        input: {identifier: username, password: password} 
-      } 
-    });
-    console.log(resp)
+    try {
+      let resp = await login({
+        variables: { 
+          input: {identifier: username, password: password} 
+        } 
+      });
+      
+      await AsyncStorage.setItem('@accessToken', resp.data.login.jwt);
+      /*
+      const key = await AsyncStorage.getItem('@accessToken')
+      console.log(key)
+      */
+      
+    } catch (error) {
+      console.log(error)
+    }
   }
   
   return (
