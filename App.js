@@ -14,6 +14,7 @@ import CreatePlaceScreen from './Screens/CreatePlaceScreen';
 import { useEffect } from 'react/cjs/react.development';
 import { useUserStore } from './lib/store/user';
 import HomeScreen from './Screens/HomeScreen';
+import InspectPlaceScreen from './Screens/InspectPlaceScreen';
 
 
 const httpLink = createHttpLink({
@@ -62,8 +63,7 @@ export default function App() {
       <NavigationContainer>
         
         <Stack.Navigator>
-          {connected === undefined && <Stack.Screen name="Loader" component={Loader} />}  
-          {connected == false && (
+          {!connected && (
             <>
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="Login" component={LoginScreen} />
@@ -74,6 +74,7 @@ export default function App() {
             <>
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="Places" component={PlacesScreen} />
+              <Stack.Screen name="InspectPlace" component={InspectPlaceScreen} />
               <Stack.Screen name="CreatePlace" component={CreatePlaceScreen} />
             </>
           )}

@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <>
       {connected == true && (<Text>connected</Text>)}
-      {!connected && (<Text>not connected</Text>)}
+      {connected == false && (<Text>not connected</Text>)}
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         {!connected &&(
           <>
@@ -45,12 +45,10 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <View>
-      {connected == true && (
         <Button
           title="Logout"
           onPress={handleLogout}
         />
-      )}
       </View>
     </>
   );

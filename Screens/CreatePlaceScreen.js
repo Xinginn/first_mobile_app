@@ -4,6 +4,7 @@ import { Button, Text, TextInput, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createPlaceMutation from '../apollo/createPlaceMutation';
 import { useMutation } from '@apollo/client';
+import placesQuery from '../apollo/placesQuery';
 
 export default function CreatePlaceScreen({ navigation }) {
   const [title,setTitle] = React.useState('');
@@ -11,11 +12,10 @@ export default function CreatePlaceScreen({ navigation }) {
   const [latitude,setLatitude] = React.useState('0');
   const [longitude,setLongitude] = React.useState('0');
 
-  const [postPlace, { data, loading, error}] = useMutation(createPlaceMutation);
+  const [postPlace, { data, loading, error}] = useMutation(createPlaceMutation, {refetchQueries: [placesQuery]});
   
   async function handleSubmit() {
     try {
-      
       let resp = await postPlace({
         variables: { 
           data: {
@@ -23,7 +23,8 @@ export default function CreatePlaceScreen({ navigation }) {
             address,
             latitude: parseFloat(latitude),
             longitude: parseFloat(longitude),
-          } 
+            publishedAt: new Date(Date.now()),
+          },
         } 
       });
       navigation.navigate('Places');
