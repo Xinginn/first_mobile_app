@@ -63,7 +63,8 @@ export default function App() {
       <NavigationContainer>
         
         <Stack.Navigator>
-          {!connected && (
+          {connected === undefined && <Stack.Screen name="Loader" component={Loader} />}
+          {connected == false && (
             <>
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="Login" component={LoginScreen} />

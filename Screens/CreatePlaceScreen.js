@@ -12,7 +12,7 @@ export default function CreatePlaceScreen({ navigation }) {
   const [latitude,setLatitude] = React.useState('0');
   const [longitude,setLongitude] = React.useState('0');
 
-  const [postPlace, { data, loading, error}] = useMutation(createPlaceMutation, {refetchQueries: [placesQuery]});
+  const [postPlace] = useMutation(createPlaceMutation, {refetchQueries: [placesQuery]});
   
   async function handleSubmit() {
     try {

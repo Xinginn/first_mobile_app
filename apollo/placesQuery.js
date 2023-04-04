@@ -5,8 +5,11 @@ query placesQuery {
   places(pagination: {limit:-1}) {
     data {
       id
-      attributes {
+      attributes{
         title
+        address
+        latitude
+        longitude
       }
     }
 	}

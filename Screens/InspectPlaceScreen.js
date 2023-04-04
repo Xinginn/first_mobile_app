@@ -1,34 +1,70 @@
 import { View, Text, Button, StyleSheet, TextInput } from "react-native";
 import * as React from 'react';
-import { useQuery } from "@apollo/client";
-import placeQuery from "../apollo/placeQuery";
+import { useMutation, useQuery } from "@apollo/client";
+//import placeQuery from "../apollo/placeQuery";
+import updatePlaceMutation from "../apollo/updatePlaceMutation";
+import placesQuery from "../apollo/placesQuery";
 
-export default function InspectPlaceScreen ({ route }) {
-  const placeId = parseInt(route.params.placeId);
-  
-  const { data, loading, error } = useQuery(placeQuery, {variables: { id: placeId}});
-  if (loading) return (<Text>'Loading'</Text>);
-  if (error) return (<Text>`Error ${error.message}`</Text>);
+export default function InspectPlaceScreen ({ route, navigation }) {
+  const placeData = route.params.data;
 
-  
-  const [title,setTitle] = React.useState('');
-  const [address,setAddress] = React.useState('');
-  const [latitude,setLatitude] = React.useState('0');
-  const [longitude,setLongitude] = React.useState('0');
-  
+  const [title,setTitle] = React.useState(placeData.attributes.title);
+  const [address,setAddress] = React.useState(placeData.attributes.address);
+  const [latitude,setLatitude] = React.useState(placeData.attributes.latitude.toString());
+  const [longitude,setLongitude] = React.useState(placeData.attributes.longitude.toString());
 
-  function handleSubmit(){
-    return
+  const [patchPlace] = useMutation(updatePlaceMutation, {refetchQueries: [placesQuery]});
+
+  async function handleSubmit(){
+    try {
+      let resp = await patchPlace({
+        variables: {
+          id: placeData.id,
+          data: {
+            title,
+            address,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+          },
+        } 
+      });
+      navigation.navigate('Places');
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <View>
 
-      <Text>Edit Place # {placeId}</Text>
-      <Text>{JSON.stringify(data.place.data.attributes.title)}</Text>
+      <Text>Edit Place - {placeData.attributes.title}</Text>
+
+
+      <TextInput
+        onChangeText={setTitle}
+        value={title}
+        placeholder="title"
+      />
+      <TextInput
+        onChangeText={setAddress}
+        value={address}
+        placeholder="address"
+      />
+      <TextInput
+        onChangeText={setLatitude}
+        keyboardType = 'numeric'
+        value={latitude}
+        placeholder="latitude"
+      />
+      <TextInput
+        onChangeText={setLongitude}
+        keyboardType = 'numeric'
+        value={longitude}
+        placeholder="longitude"
+      />
 
       <Button
-        title="Submit"
+        title="Update"
         onPress={handleSubmit}
       />
 
