@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button} from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -14,6 +13,7 @@ import PlacesScreen from './Screens/PlacesScreen';
 import CreatePlaceScreen from './Screens/CreatePlaceScreen';
 import { useEffect } from 'react/cjs/react.development';
 import { useUserStore } from './lib/store/user';
+import HomeScreen from './Screens/HomeScreen';
 
 
 const httpLink = createHttpLink({
@@ -37,26 +37,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        title="Login"
-        onPress={() => navigation.navigate('Login')}
-      />
-      <Button
-        title="Register"
-        onPress={() => navigation.navigate('Register')}
-      />
-      <Button
-        title="Places"
-        onPress={() => navigation.navigate('Places')}
-      />
-      <Text>Home Screen</Text>
-    </View>
-  );
-}
 
 const Stack = createNativeStackNavigator();
 const Loader = () => <Text>Loading...</Text>;

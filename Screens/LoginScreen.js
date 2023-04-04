@@ -21,7 +21,6 @@ export default function LoginScreen({ navigation }) {
       
       await AsyncStorage.setItem('@accessToken', resp.data.login.jwt);
       setConnected(true);
-      // navigation.navigate('Places');
 
     } catch (error) {
       console.log(error)
