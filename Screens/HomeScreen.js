@@ -37,10 +37,16 @@ export default function HomeScreen({ navigation }) {
           </>
         )}
         {connected == true &&(
+          <>
           <Button
             title="Places"
             onPress={() => navigation.navigate('Places')}
           />
+          <Button
+            title="New Place"
+            onPress={() => navigation.navigate('CreatePlace')}
+          />
+          </>
         )}
       </View>
 

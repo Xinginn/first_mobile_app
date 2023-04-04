@@ -9,8 +9,8 @@ import placesQuery from '../apollo/placesQuery';
 export default function CreatePlaceScreen({ navigation }) {
   const [title,setTitle] = React.useState('');
   const [address,setAddress] = React.useState('');
-  const [latitude,setLatitude] = React.useState('0');
-  const [longitude,setLongitude] = React.useState('0');
+  const [latitude,setLatitude] = React.useState('');
+  const [longitude,setLongitude] = React.useState('');
 
   const [postPlace] = useMutation(createPlaceMutation, {refetchQueries: [placesQuery]});
   
